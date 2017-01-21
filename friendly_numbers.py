@@ -13,9 +13,9 @@ def friendly_numbers(start, end):
     f_numbers = {}  # result dictionary to store friendly numbers
     abndncy_dict = {}  # intermediate dictionary to store abundancies
 
-    for i in range(start, end):
+    for i in range(start, end+1):
         div_list = []  # create set containing all divisors for the iterator
-        for k in range(1, (i/2)+1):  # check every number up to half of the iterator
+        for k in range(1, int(i/2)+1):  # check every number up to half of the iterator
             if i % k == 0:  # if the remainder is zero the number is a divisor
                 div_list.append(k)  # add all divisors to a list
             else:
@@ -31,6 +31,6 @@ def friendly_numbers(start, end):
 
     return f_numbers
 
-results = friendly_numbers(1, 10001)
+results = friendly_numbers(1, 140)
 
 print(results)
