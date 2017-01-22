@@ -4,33 +4,63 @@
         of the numbers divisors divided by the number itself
     for example:
         divisors of 12 are: 1, 2, 3, 4, 6, 12
-        the sum of those divisors is: 1 + 2 + 3 + 4 + 6 + 12 = 26
+        the sum of those divisors is: 1 + 2 + 3 + 4 + 6 + 12 = 28
         the abundancy of 12 is: 28/12 = 7/3 or 2.333 repeating"""
+import time
 
 
 def friendly_numbers(start, end):
 
-    f_numbers = {}  # result dictionary to store friendly numbers
-    abndncy_dict = {}  # intermediate dictionary to store abundancies
+    friends = {}  # result dictionary to store friendly numbers
+    abundancies = {}  # intermediate dictionary to store abundancies
 
-    for i in range(start, end+1):
-        div_list = []  # create set containing all divisors for the iterator
-        for k in range(1, int(i/2)+1):  # check every number up to half of the iterator
-            if i % k == 0:  # if the remainder is zero the number is a divisor
-                div_list.append(k)  # add all divisors to a list
-            else:
-                continue  # continue through the loop if remainder isn't zero
-        abundancy = sum(div_list)/i  # calculate abundancy for current iterator
-        abndncy_dict.setdefault(abundancy, [])  # set default to abundancy if it is missing
-        abndncy_dict[abundancy].append(i)  # add the iterator to the list for each abundancy
+    for number in range(start, end + 1):
 
-    for abundancy in abndncy_dict.keys():  # iterate through each abundancy value
-        if len(abndncy_dict[abundancy]) > 1:  # check if each abundancy has more than one number
-            f_numbers.setdefault(abundancy, [])  # set default key for dictionary
-            f_numbers[abundancy].append(abndncy_dict[abundancy])  # add friendly groups to dict
+        divisors = []  # create set containing all divisors for the iterator
 
-    return f_numbers
+        for potential_divisor in range(1, int(number / 2) + 1):  # check every number up to half of the iterator
+            if number % potential_divisor == 0:  # if the remainder is zero the number is a divisor
+                divisors.append(potential_divisor)  # add all divisors to a list
 
-results = friendly_numbers(1, 140)
+        abundancy = sum(divisors) / number  # calculate abundancy for current iterator
 
-print(results)
+        if abundancy not in abundancies:
+            abundancies[abundancy] = []  # prepare if abundancy is new
+
+        abundancies[abundancy].append(number)  # add the iterator to the list for each abundancy
+
+    for abundancyKey in abundancies.keys():  # iterate through each abundancy value
+
+        if len(abundancies[abundancyKey]) > 1:  # check if each abundancy has more than one number
+
+            if abundancyKey not in friends:
+                friends[abundancyKey] = []  # set default key for dictionary
+
+            friends[abundancyKey].append(abundancies[abundancyKey])  # add friendly groups to dict
+
+    return friends
+
+iterations = 10
+start_limit = 100
+multiplier = 2
+
+limits = []
+
+for iteration in range(0, iterations):
+
+    if len(limits) == 0:
+        limits.append(start_limit)
+    else:
+        limits.append(limits[iteration - 1] * 2)
+
+
+for limit in limits:
+
+    start_time = time.time()
+
+    results = friendly_numbers(1, limit)
+
+    end_time = time.time()
+    print("Limit: " + str(limit).rjust(8) + ";  Friends#: " + str(len(results)).rjust(5) + ";  Time(s): " +
+          str(end_time - start_time).rjust(25) + ";  Friends: " + str(results))
+
